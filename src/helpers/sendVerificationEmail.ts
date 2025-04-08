@@ -1,23 +1,61 @@
-import { resend } from "@/lib/resend";
-import VerificationEmail from "../../emails/VerificationEmail";
-import { ApiResponse } from "@/types/ApiResponse";
+import nodemailer from "nodemailer";
 
 export async function sendVerificationEmail(
-  email: string,
+  toEmail: string,
   username: string,
-  verifyCode: string
-): Promise<ApiResponse> {
+  otp: string
+) {
+  const emailHtml = `<!DOCTYPE html>
+  <html lang="en" dir="ltr">
+    <body style="font-family: Verdana, sans-serif; padding: 20px; color: #000000;">
+      <p style="font-size: 16px;">
+        Here's your verification code: <strong>${otp}</strong>
+      </p>
+  
+      <h2 style="font-size: 24px; margin-bottom: 10px;">Hello ${username},</h2>
+  
+      <p style="font-size: 16px;">
+        Thank you for registering. Please use the following verification code to
+        complete your registration:
+      </p>
+  
+      <p style="font-size: 20px; font-weight: bold; margin: 15px 0;">${otp}</p>
+  
+      <p style="font-size: 16px;">
+        If you did not request this code, please ignore this email.
+      </p>
+  
+      <a
+        href="http://localhost:3000/verify/${username}"
+        style="display: inline-block; padding: 10px 20px; margin-top: 20px;
+               background-color: #61dafb; color: white; text-decoration: none;
+               border-radius: 4px; font-size: 16px;"
+      >
+        Verify here
+      </a>
+    </body>
+  </html>`;
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.GMAIL_USER,
+    to: toEmail,
+    subject: "Your Verification Code",
+    html: emailHtml,
+  };
+
   try {
-    console.log("inside the email sending page");
-    await resend.emails.send({
-      from: "onboarding@resend.dev",
-      to: email,
-      subject: "Secret Message | Verification Code",
-      react: VerificationEmail({ username, otp: verifyCode }),
-    });
-    return { success: true, message: "Verification email send successfully" };
-  } catch (emailError) {
-    console.log("Error sending verificaton email", emailError);
-    return { success: false, message: "Failed to send verification email" };
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, message: info.response };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return { success: false, message: error };
   }
 }

@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
+  _id: mongoose.Types.ObjectId;
   content: string;
   createdAt: Date;
 }
@@ -38,7 +39,6 @@ const UserSchema: Schema<User> = new Schema({
   email: {
     type: String,
     required: [true, "Email is required"],
-    unique: true,
     match: [/.+\@.+\..+/, "please use a valid email address"],
   },
   password: {

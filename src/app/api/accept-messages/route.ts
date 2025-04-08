@@ -21,11 +21,11 @@ export async function POST(request: Request) {
     }
 
     const userId = user._id;
-    const { acceptMessages } = await request.json();
-
+    const { acceptMessage } = await request.json();
+    console.log(acceptMessage);
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
-      { isAcceptingMessage: acceptMessages },
+      { isAcceptingMessage: acceptMessage },
       { new: true }
     );
 
@@ -64,6 +64,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     const user: User = session?.user;
 
+    console.log(user);
     if (!session || !session.user) {
       return Response.json(
         {
@@ -77,7 +78,7 @@ export async function GET() {
     const userId = user._id;
 
     const updatedUser = await UserModel.findById(userId);
-
+    console.log(updatedUser);
     if (!updatedUser) {
       return Response.json(
         {
@@ -101,7 +102,7 @@ export async function GET() {
       {
         success: false,
         message: "failed to update user status to accept messages",
-      }, 
+      },
       { status: 500 }
     );
   }

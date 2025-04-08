@@ -120,3 +120,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.title-fit {
+  font-size: clamp(1rem, 5vw, 1.5rem); /* adjusts between 1rem and 1.5rem */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
