@@ -23,6 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
 const page = () => {
   const [username, setUsername] = useState("");
   const [usernameMessage, setUsernameMessage] = useState("");
@@ -162,7 +164,13 @@ const page = () => {
             </Button>
           </form>
         </Form>
-
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          className="flex hover:cursor-pointer items-center gap-2 bg-white text-black border px-4 py-2 rounded shadow"
+        >
+          <FcGoogle size={20} />
+          Continue with Google
+        </button>
         <div className="text-center mt-4">
           <p>
             Already a member?

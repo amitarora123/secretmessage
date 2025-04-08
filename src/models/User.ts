@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, Types } from "mongoose";
 
 export interface Message extends Document {
   _id: mongoose.Types.ObjectId;
@@ -19,6 +19,7 @@ const MessageSchema: Schema<Message> = new Schema({
 });
 
 export interface User extends Document {
+  _id: Types.ObjectId;
   username: string;
   email: string;
   password: string;
@@ -27,6 +28,7 @@ export interface User extends Document {
   isVerified: boolean;
   isAcceptingMessage: boolean;
   messages: Message[];
+  provider: string;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -43,15 +45,15 @@ const UserSchema: Schema<User> = new Schema({
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
+    required: false,
   },
   verifyCode: {
     type: String,
-    required: [true, "Verify code is required"],
+    required: false,
   },
   verifyCodeExpiry: {
     type: Date,
-    required: [true, "Verify code Expiry is required"],
+    required: false,
   },
 
   isVerified: {
@@ -62,7 +64,10 @@ const UserSchema: Schema<User> = new Schema({
     type: Boolean,
     default: true,
   },
-
+  provider: {
+    type: String,
+    default: "credentials", // or "google"
+  },
   messages: [MessageSchema],
 });
 

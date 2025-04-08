@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 import {
   Form,
   FormControl,
@@ -97,7 +98,7 @@ const SignIn = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit"  disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
@@ -108,7 +109,13 @@ const SignIn = () => {
             </Button>
           </form>
         </Form>
-
+        <button
+          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          className="flex hover:cursor-pointer items-center gap-2 bg-white text-black border px-4 py-2 rounded shadow"
+        >
+          <FcGoogle size={20} />
+          Continue with Google
+        </button>
         <div className="text-center mt-4">
           <p>
             Don&apos;t have an Account?
